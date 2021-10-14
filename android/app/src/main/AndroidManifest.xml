@@ -31,13 +31,13 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" >
-            <intent-filter android:label="Redditech">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="reddit"/>
+                <data android:scheme="https"
+                      android:host="www.reddditech.max.com"
+                      android:pathPrefix="/login-callback"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

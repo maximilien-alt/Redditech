@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../localStorage.dart';
+import '../login.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -8,14 +10,30 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  String _token = "";
+  final storage = LocalStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    refreshTokenState();
+    //print("TOKEN: $_token");
+  }
+
+  Future<void> refreshTokenState() async {
+    _token = await storage.getToken();
+    print("TOKEN: $_token");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Search'),
-      ),
+      //appBar: AppBar(
+      //  centerTitle: true,
+      //  title: Text('Search'),
+      //),
       body: Center(
-        child: Text('Search Screen', style: TextStyle(fontSize: 40)),
+        child: Text('Search Screen: $_token', style: TextStyle(fontSize: 40)),
       ),
     );
   }

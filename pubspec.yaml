@@ -31,6 +31,10 @@ dependencies:
   draw: ^1.0.2
   flutter_web_auth: ^0.3.1
   http: ^0.13.3
+  flutter_appauth: ^1.1.0+2
+  url_launcher: ^6.0.10
+  uni_links: ^0.5.1
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   flutter_test:
@@ -41,7 +45,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  assets:
+    - assets/Reddit-Logo.wine.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
