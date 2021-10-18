@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../page/homePage.dart';
 import '../page/profilePage.dart';
 import '../page/searchPage.dart';
@@ -25,8 +26,10 @@ class _NavState extends State<Nav> {
   ];
 
   Future<void> refreshTokenState() async {
-    _token = await storage.getToken();
-    print("TOKEN: $_token");
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      _token = pref.getString("token") ?? "";
+    });
   }
 
   @override
@@ -62,6 +65,7 @@ class _NavState extends State<Nav> {
               child: GestureDetector(
                 onTap: () {
                   storage.deleteToken();
+                  refreshTokenState();
                 },
                 child: Icon(Icons.logout),
               ),

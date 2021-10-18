@@ -15,7 +15,7 @@ class LocalStorage {
 
   Future<void> deleteToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
+    await prefs.setString('token', "");
   }
 
   Future<void> setToken(String token) async {

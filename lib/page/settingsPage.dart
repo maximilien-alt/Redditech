@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../localStorage.dart';
 import '../login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -21,8 +22,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> refreshTokenState() async {
-    _token = await storage.getToken();
-    print("TOKEN: $_token");
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      _token = pref.getString("token") ?? "";
+    });
   }
 
   @override

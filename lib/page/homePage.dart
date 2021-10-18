@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redditech/localStorage.dart';
 import '../login.dart';
 import '../localStorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,8 +23,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> refreshTokenState() async {
-    _token = await storage.getToken();
-    print("TOKEN: $_token");
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      _token = pref.getString("token") ?? "";
+    });
   }
 
   @override

@@ -35,18 +35,18 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> refreshLoginState() async {
-    isLogin = await storage.isLoggedIn();
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      isLogin = pref.getString("token") != "";
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    refreshLoginState();
     if (isLogin) {
-      //Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //  return Nav();
-      //}));
       return Nav();
     } else {
-      //refreshLoginState();
       return Scaffold(
         body: SafeArea(
           child: Container(
