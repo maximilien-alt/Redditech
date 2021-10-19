@@ -36,9 +36,9 @@ void callTokenRequest(String code) async {
     String token = json["access_token"];
     SharedPreferences.getInstance().then((SharedPreferences value) {
       value.setString("token", token);
+      print("TOKEN: $token");
     });
     //json["access_token"];
-    //print("JSON: ${json["access_token"]}, RESPONSE: ${response.body}");
   }
 }
 

@@ -18,7 +18,7 @@ class _NavState extends State<Nav> {
   final storage = LocalStorage();
   int currentTabIndex = 0;
   String _token = "";
-  final List<Widget> screens = [
+  List<Widget> screens = [
     HomePage(),
     SearchPage(),
     ProfilePage(),
