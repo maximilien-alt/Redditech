@@ -17,7 +17,7 @@ class RedditAPI {
     if (response.statusCode == 200) {
       return ProfileInfos.fromJson(jsonDecode(response.body));
     } else {
-      return ProfileInfos("name", {}, 0, "icon_img");
+      return ProfileInfos("name", {}, 0, "icon_img", 0);
     }
   }
 }

@@ -11,6 +11,7 @@ ProfileInfos _$ProfileInfosFromJson(Map<String, dynamic> json) => ProfileInfos(
       json['subreddit'] as Map<String, dynamic>,
       json['total_karma'] as int,
       json['icon_img'] as String,
+      (json['created'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$ProfileInfosToJson(ProfileInfos instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$ProfileInfosToJson(ProfileInfos instance) =>
       'subreddit': instance.subreddit,
       'total_karma': instance.total_karma,
       'icon_img': instance.icon_img,
+      'created': instance.created,
     };
