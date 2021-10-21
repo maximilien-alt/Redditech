@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:redditech/ProfileInfos.dart';
+import 'package:redditech/infos/PostInfos.dart';
+import 'package:redditech/infos/ProfileInfos.dart';
 import '../login.dart';
 import '../localStorage.dart';
 import '../RedditAPI.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import '../views/PostView.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,10 +20,19 @@ class _ProfilePageState extends State<ProfilePage> {
   final storage = LocalStorage();
   RedditAPI callAPI = RedditAPI();
   ProfileInfos? infos;
+  PostInfos? postInfos;
 
   _ProfilePageState() {
-    callAPI.getProfileInfos().then((value) {
-      infos = value;
+    callAPI.getProfileInfos().then((ProfileInfos value) {
+      setState(() {
+        infos = value;
+      });
+      callAPI.getAllPosts(infos!.name).then((PostInfos post) {
+        setState(() {
+          print("DATA: $post");
+          postInfos = post;
+        });
+      });
     });
   }
 
@@ -215,9 +226,26 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 body: TabBarView(
                   children: [
-                    Center(
-                      child: Text("Posts"),
-                    ),
+                    Container(
+                        child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                            return Container(
+                                child: Column(children: <Widget>[
+                              SizedBox(height: index == 0 ? 0 : 10),
+                              PostView(
+                                  infos: postInfos!.data["children"][index],
+                                  box: index)
+                            ]));
+                          },
+                              childCount: postInfos == null
+                                  ? 0
+                                  : postInfos!.data["children"]!.length),
+                        ),
+                      ],
+                    )),
                     Center(
                       child: Text("Comments"),
                     )

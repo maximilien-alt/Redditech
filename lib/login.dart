@@ -23,7 +23,8 @@ class _LoginState extends State<Login> {
   String state = "azertyuiop";
   String redirectUri = "https://www.reddditech.max.com/login-callback";
   String duration = "permanent";
-  String scope = "identity";
+  String scope =
+      "identity edit flair history modconfig modflair modlog modposts modwiki mysubreddits privatemessages read report save submit subscribe vote wikiedit wikiread";
   late String launchedUrl;
 
   @override
