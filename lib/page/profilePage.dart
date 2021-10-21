@@ -190,18 +190,42 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          //DefaultTabController(
-          //  length: 3,
-          //  child: AppBar(
-          //    bottom: TabBar(
-          //      tabs: [
-          //        Tab(icon: Icon(Icons.directions_car)),
-          //        Tab(icon: Icon(Icons.directions_transit)),
-          //        Tab(icon: Icon(Icons.directions_bike)),
-          //      ],
-          //    ),
-          //  ),
-          //)
+          Container(
+            height: MediaQuery.of(context).size.height * 0.389,
+            color: Colors.black87,
+            child: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.blueAccent,
+                  toolbarHeight: MediaQuery.of(context).size.height * 0.05,
+                  flexibleSpace: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TabBar(
+                        indicatorColor: Colors.white,
+                        indicatorWeight: 2,
+                        tabs: [
+                          Text("Posts"),
+                          Text("Comments"),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                body: TabBarView(
+                  children: [
+                    Center(
+                      child: Text("Posts"),
+                    ),
+                    Center(
+                      child: Text("Comments"),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
         ]),
       ],
     ));
