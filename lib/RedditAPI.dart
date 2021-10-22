@@ -22,6 +22,32 @@ class RedditAPI {
     }
   }
 
+  Future<PostInfos> getMySubReddits() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url = "https://oauth.reddit.com/subreddits/mine/subscriber";
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    });
+    if (response.statusCode == 200) {
+      return PostInfos.fromJson(jsonDecode(response.body));
+    } else {
+      return PostInfos({});
+    }
+  }
+
+  Future<PostInfos> getPostsFromSubReddit(String name, String filter) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url = "https://oauth.reddit.com/r/" + name + filter;
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    });
+    if (response.statusCode == 200) {
+      return PostInfos.fromJson(jsonDecode(response.body));
+    } else {
+      return PostInfos({});
+    }
+  }
+
   Future<PostInfos> getAllPosts(String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String url = "https://oauth.reddit.com/user/" + username + "/submitted";
@@ -33,5 +59,17 @@ class RedditAPI {
     } else {
       return PostInfos({});
     }
+  }
+
+  Future<bool> votePost(String postId, int vote) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url = "https://oauth.reddit.com/api/vote";
+    final response = await http.post(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    }, body: <String, String>{
+      'id': postId,
+      'dir': vote.toString(),
+    });
+    return response.statusCode == 200;
   }
 }

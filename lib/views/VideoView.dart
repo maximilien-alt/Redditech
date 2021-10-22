@@ -36,22 +36,10 @@ class VideoView extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                         ),
                         body: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(0.0)),
-                                  child: ChewieListItem(
-                                    videoPlayerController:
-                                        VideoPlayerController.network(this.url),
-                                    looping: true,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          child: ChewieListItem(
+                            videoPlayerController:
+                                VideoPlayerController.network(this.url),
+                            looping: true,
                           ),
                         ),
                       ),

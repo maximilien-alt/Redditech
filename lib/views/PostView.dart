@@ -5,11 +5,17 @@ import '../localStorage.dart';
 import 'package:intl/intl.dart';
 import '../infos/PostInfos.dart';
 import 'ImageView.dart';
+import '../RedditAPI.dart';
 
 class PostView extends StatelessWidget {
   final Map<String, dynamic> infos;
   final int box;
   PostView({required this.infos, required this.box});
+  RedditAPI callAPI = RedditAPI();
+
+  void vote(String postId, int vote) {
+    callAPI.votePost(postId, vote);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +39,7 @@ class PostView extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         //height: 50,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: <Widget>[
@@ -52,7 +59,7 @@ class PostView extends StatelessWidget {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
                   width: 5,
@@ -63,46 +70,75 @@ class PostView extends StatelessWidget {
                 )
               ],
             ),
-            infos["data"]["is_video"]
-                ? VideoView(
-                    thumbnail: infos["data"]["thumbnail"],
-                    url: infos["data"]["secure_media"]["reddit_video"]
-                        ["fallback_url"],
-                    context_: context)
-                : infos["data"]["post_hint"] == "image"
-                    ? ImageView(
-                        thumbnail: infos["data"]["thumbnail"],
-                        url: infos["data"]["url_overridden_by_dest"],
-                        context_: context)
-                    : InkWell(
-                        child: infos["data"]["selftext"].contains("https")
-                            ? Text(
-                                infos["data"]["selftext"].substring(14),
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              )
-                            : Text(infos["data"]["selftext"]),
-                        onTap: () {
-                          if (infos["data"]["selftext"].contains("https"))
-                            launch(infos["data"]["selftext"].substring(14));
-                        }),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                infos["data"]["is_video"]
+                    ? VideoView(
+                        thumbnail: infos["data"]["thumbnail"],
+                        url: infos["data"]["secure_media"]["reddit_video"]
+                            ["fallback_url"],
+                        context_: context)
+                    : infos["data"]["post_hint"] == "image"
+                        ? ImageView(
+                            thumbnail: infos["data"]["thumbnail"],
+                            url: infos["data"]["url_overridden_by_dest"],
+                            context_: context)
+                        : InkWell(
+                            child: infos["data"]["selftext"].contains("https")
+                                ? Text(
+                                    infos["data"]["selftext"].substring(14),
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  )
+                                : Text(infos["data"]["selftext"]),
+                            onTap: () {
+                              if (infos["data"]["selftext"].contains("https"))
+                                launch(infos["data"]["selftext"].substring(14));
+                            }),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SizedBox(
                   width: 5,
                 ),
-                Icon(
-                  Icons.arrow_upward,
-                  size: 20,
-                  color: Colors.orange,
+                GestureDetector(
+                  child: Icon(
+                    Icons.arrow_upward,
+                    size: 20,
+                    color: infos["data"]["likes"] == true
+                        ? Colors.orange
+                        : Colors.black,
+                  ),
+                  onTap: () {
+                    callAPI.votePost(infos["data"]["name"],
+                        infos["data"]["likes"] == true ? 0 : 1);
+                    infos["data"]["likes"] =
+                        infos["data"]["likes"] == true ? null : true;
+                  },
                 ),
                 Text(infos["data"]["ups"].toString()),
-                Icon(
-                  Icons.arrow_downward,
-                  size: 20,
-                  color: Colors.black,
+                SizedBox(width: 10),
+                GestureDetector(
+                  child: Icon(
+                    Icons.arrow_downward,
+                    size: 20,
+                    color: infos["data"]["likes"] == false
+                        ? Colors.red
+                        : Colors.black,
+                  ),
+                  onTap: () {
+                    callAPI.votePost(infos["data"]["name"],
+                        infos["data"]["likes"] == false ? 0 : -1);
+                    infos["data"]["likes"] =
+                        infos["data"]["likes"] == false ? null : false;
+                  },
                 ),
                 Text(infos["data"]["downs"].toString()),
               ],
