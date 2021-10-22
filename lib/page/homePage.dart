@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redditech/infos/PostInfos.dart';
+import 'package:redditech/infos/ProfileInfos.dart';
 import 'package:redditech/localStorage.dart';
 import '../login.dart';
 import '../localStorage.dart';
@@ -15,71 +16,116 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _token = "";
+  final storage = LocalStorage();
   RedditAPI callAPI = RedditAPI();
   PostInfos? allSubReddits;
-  List<PostInfos> allPosts = List.empty();
+  PostInfos? allPosts = null;
+  List<PostInfos> postList = List.empty();
+  String dropdownValue = 'new';
+  int limit = 5;
 
   @override
   void initState() {
     super.initState();
-    refreshTokenState();
     //print("TOKEN: $_token");
   }
 
   _HomePageState() {
-    callAPI.getMySubReddits().then((PostInfos sub) {
-      setState(() {
-        allSubReddits = sub;
-        callAPI
-            .getPostsFromSubReddit(
-                allSubReddits!.data["children"][3]["data"]["display_name"], "")
-            .then((PostInfos value) {
-          allPosts[0] = value;
-        });
-        //for (int index = 0;
-        //    index < allSubReddits!.data["children"]!.length;
-        //    index += 1) {
-        //  print(
-        //      "NAME: ${allSubReddits!.data["children"][index]["data"]["display_name"]}");
-        //  callAPI
-        //      .getPostsFromSubReddit(
-        //          allSubReddits!.data["children"][index]["data"]
-        //              ["display_name"],
-        //          "")
-        //      .then((PostInfos value) {
-        //    allPosts.add(value);
-        //  });
-        //}
-      });
-    });
+    callRequests("new", limit);
   }
 
-  Future<void> refreshTokenState() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      _token = pref.getString("token") ?? "";
-    });
+  Future<void> callRequests(String filter, int limit) async {
+    if (allPosts != null) {
+      allPosts!.data["children"] = [];
+    }
+    PostInfos sub = await callAPI.getMySubReddits();
+    for (int index = 0; index < sub.data["children"].length; index += 1) {
+      PostInfos value = await callAPI.getPostsFromSubReddit(
+          sub.data["children"][index]["data"]["display_name"], filter, limit);
+      if (allPosts == null) {
+        setState(() {
+          allPosts = value;
+        });
+      } else {
+        if (value == null ||
+            value.data == null ||
+            value.data["children"] == null) continue;
+        for (int i = 0; i < value.data["children"].length; i += 1) {
+          setState(() {
+            allPosts!.data["children"].add(value.data["children"][i]);
+          });
+        }
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    //if ()
-    return Container(
-        child: CustomScrollView(
-      slivers: <Widget>[
-        SliverList(
-          delegate:
-              SliverChildBuilderDelegate((BuildContext context, int index) {
-            return Container(
-                child: Column(children: <Widget>[
-              for (PostInfos i in allPosts[index].data["children"])
-                PostView(infos: allPosts[index].data["children"][i], box: 0)
-              //SizedBox(height: index == 0 ? 0 : 10),
-            ]));
-          }, childCount: allPosts.length),
+    if (allPosts == null ||
+        allPosts!.data == null ||
+        allPosts!.data["children"] == null ||
+        allPosts!.data["children"].length == 0)
+      return Center(child: CircularProgressIndicator());
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              DropdownButton<String>(
+                value: dropdownValue,
+                icon: const Icon(Icons.arrow_drop_down_outlined),
+                iconSize: 24,
+                elevation: 16,
+                style: const TextStyle(color: Colors.black),
+                underline: Container(
+                  height: 2,
+                  color: Colors.white,
+                ),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownValue = newValue!;
+                    callRequests(dropdownValue, limit);
+                  });
+                },
+                items: <String>['new', 'best', 'hot', 'random']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              Text("Home"),
+              GestureDetector(
+                onTap: () {
+                  storage.deleteToken();
+                },
+                child: Icon(Icons.logout),
+              ),
+            ],
+          ),
         ),
-      ],
-    ));
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                return Container(
+                    child: Column(children: <Widget>[
+                  //for (PostInfos i in allPosts[index].data["children"])
+                  SizedBox(height: index == 0 ? 0 : 10),
+                  PostView(infos: allPosts!.data["children"][index], box: 0)
+                ]));
+              },
+                  childCount: allPosts != null &&
+                          allPosts!.data != null &&
+                          allPosts!.data["children"] != null
+                      ? allPosts!.data["children"]!.length
+                      : 0),
+            ),
+          ],
+        ));
   }
 }

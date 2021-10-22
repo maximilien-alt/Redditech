@@ -50,28 +50,6 @@ class _NavState extends State<Nav> {
       return Login();
     } else {
       return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(currentTabIndex == 0
-              ? "Home"
-              : currentTabIndex == 1
-                  ? "Search"
-                  : currentTabIndex == 2
-                      ? "Profile"
-                      : "Settings"),
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  storage.deleteToken();
-                  refreshTokenState();
-                },
-                child: Icon(Icons.logout),
-              ),
-            ),
-          ],
-        ),
         body: screens.elementAt(currentTabIndex),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),

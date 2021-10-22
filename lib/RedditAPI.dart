@@ -35,9 +35,10 @@ class RedditAPI {
     }
   }
 
-  Future<PostInfos> getPostsFromSubReddit(String name, String filter) async {
+  Future<PostInfos> getPostsFromSubReddit(
+      String name, String filter, int limit) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String url = "https://oauth.reddit.com/r/" + name + filter;
+    String url = "https://oauth.reddit.com/r/$name/$filter?limit=$limit";
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Authorization': 'bearer ' + prefs.getString("token")!,
     });

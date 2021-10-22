@@ -59,15 +59,19 @@ class PostView extends StatelessWidget {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
                   width: 5,
                 ),
-                Text(
-                  infos["data"]["title"],
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
+                Expanded(
+                  child: Text(
+                    infos["data"]["title"],
+                    //overflow: TextOverflow.ellipsis,
+                    //maxLines: 1,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
               ],
             ),
             Row(
@@ -84,20 +88,17 @@ class PostView extends StatelessWidget {
                             thumbnail: infos["data"]["thumbnail"],
                             url: infos["data"]["url_overridden_by_dest"],
                             context_: context)
-                        : InkWell(
-                            child: infos["data"]["selftext"].contains("https")
-                                ? Text(
-                                    infos["data"]["selftext"].substring(14),
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  )
-                                : Text(infos["data"]["selftext"]),
-                            onTap: () {
-                              if (infos["data"]["selftext"].contains("https"))
-                                launch(infos["data"]["selftext"].substring(14));
-                            }),
+                        : Expanded(
+                            child: Container(
+                              height: 120,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: Text(
+                                  infos["data"]["selftext"],
+                                ),
+                              ),
+                            ),
+                          ),
               ],
             ),
             Row(

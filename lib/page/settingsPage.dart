@@ -31,10 +31,21 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(
-      //  centerTitle: true,
-      //  title: Text('Settings'),
-      //),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Home"),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                storage.deleteToken();
+              },
+              child: Icon(Icons.logout),
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: Text('Settings Screen: $_token', style: TextStyle(fontSize: 40)),
       ),
