@@ -76,6 +76,19 @@ class RedditAPI {
     }
   }
 
+  Future<PostInfos> aboutSubReddit(String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url = "https://oauth.reddit.com/r/$name/about";
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    });
+    if (response.statusCode == 200) {
+      return PostInfos.fromJson(jsonDecode(response.body));
+    } else {
+      return PostInfos({});
+    }
+  }
+
   Future<bool> votePost(String postId, int vote) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String url = "https://oauth.reddit.com/api/vote";
