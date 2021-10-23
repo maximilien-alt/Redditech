@@ -62,6 +62,20 @@ class RedditAPI {
     }
   }
 
+  Future<PostInfos> searchForPost(String query, int limit) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url =
+        "https://oauth.reddit.com/api/subreddit_autocomplete_v2?include_over_18=true&include_profiles=true&query=$query&limit=$limit";
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    });
+    if (response.statusCode == 200) {
+      return PostInfos.fromJson(jsonDecode(response.body));
+    } else {
+      return PostInfos({});
+    }
+  }
+
   Future<bool> votePost(String postId, int vote) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String url = "https://oauth.reddit.com/api/vote";

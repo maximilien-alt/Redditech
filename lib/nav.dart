@@ -51,11 +51,6 @@ class _NavState extends State<Nav> {
     } else {
       return Scaffold(
         body: screens.elementAt(currentTabIndex),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
