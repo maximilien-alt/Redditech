@@ -43,6 +43,7 @@ dependencies:
   chewie: ^1.2.2
   cached_network_image: ^3.1.0
   flutter_image: ^4.1.0
+  carousel_slider: ^4.0.0
 
 dev_dependencies:
   build_runner: ^2.1.4
@@ -56,6 +57,10 @@ dev_dependencies:
 flutter:
   assets:
     - assets/Reddit-Logo.wine.png
+  fonts:
+  - family: Posts
+    fonts:
+    - asset: assets/Montserrat-Medium.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

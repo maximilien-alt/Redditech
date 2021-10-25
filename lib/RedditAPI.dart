@@ -62,6 +62,28 @@ class RedditAPI {
     }
   }
 
+  Future<PostInfos> getAboutSubReddit(String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url = "https://oauth.reddit.com/r/$name/about";
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    });
+    if (response.statusCode == 200) {
+      return PostInfos.fromJson(jsonDecode(response.body));
+    } else {
+      return PostInfos({});
+    }
+  }
+
+  Future<void> subOrUnsubToSubReddit(String action, String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url =
+        "https://oauth.reddit.com/api/subscribe?action=$action&sr=$name";
+    await http.post(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    });
+  }
+
   Future<PostInfos> searchForPost(String query, int limit) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String url =

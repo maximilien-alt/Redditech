@@ -61,6 +61,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var linearGradient = const BoxDecoration(
+      gradient: const LinearGradient(
+        begin: FractionalOffset.centerRight,
+        end: FractionalOffset.bottomLeft,
+        colors: <Color>[Colors.blue, Colors.blueAccent],
+      ),
+    );
+
     if (allPosts == null ||
         allPosts!.data == null ||
         allPosts!.data["children"] == null ||
@@ -107,25 +115,27 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                return Container(
-                    child: Column(children: <Widget>[
-                  //for (PostInfos i in allPosts[index].data["children"])
-                  SizedBox(height: index == 0 ? 0 : 10),
-                  PostView(infos: allPosts!.data["children"][index], box: 0)
-                ]));
-              },
-                  childCount: allPosts != null &&
-                          allPosts!.data != null &&
-                          allPosts!.data["children"] != null
-                      ? allPosts!.data["children"]!.length
-                      : 0),
-            ),
-          ],
-        ));
+        body: Container(
+            decoration: linearGradient,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    return Container(
+                        child: Column(children: <Widget>[
+                      //for (PostInfos i in allPosts[index].data["children"])
+                      SizedBox(height: 10),
+                      PostView(infos: allPosts!.data["children"][index], box: 0)
+                    ]));
+                  },
+                      childCount: allPosts != null &&
+                              allPosts!.data != null &&
+                              allPosts!.data["children"] != null
+                          ? allPosts!.data["children"]!.length
+                          : 0),
+                ),
+              ],
+            )));
   }
 }

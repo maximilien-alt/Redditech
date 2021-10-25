@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
 import '../localStorage.dart';
@@ -76,7 +74,7 @@ class _SearchPageState extends State<SearchPage> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => Container(
-              child: SubRedditPage(subReddit, avatarTag: index),
+              child: SubRedditPage(subReddit["display_name"], avatarTag: index),
             ),
           ),
         );
@@ -85,7 +83,8 @@ class _SearchPageState extends State<SearchPage> {
         tag: index,
         child: subReddit["icon_img"] != null && subReddit["icon_img"] != ""
             ? CircleAvatar(
-                backgroundImage: NetworkImageWithRetry(subReddit["icon_img"]))
+                backgroundImage: NetworkImageWithRetry(
+                    subReddit["icon_img"].replaceAll("amp;", "")))
             : CircleAvatar(),
       ),
       title: Text(subReddit["display_name"]),
