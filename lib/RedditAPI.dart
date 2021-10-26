@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'infos/ProfileInfos.dart';
 import 'infos/PostInfos.dart';
+import 'infos/SettingsInfos.dart';
 
 class RedditAPI {
   RedditAPI();
@@ -59,6 +60,31 @@ class RedditAPI {
       return PostInfos.fromJson(jsonDecode(response.body));
     } else {
       return PostInfos({});
+    }
+  }
+
+  Future<void> patchSettings(String settings, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map data = {settings: value};
+    String url = "https://oauth.reddit.com/api/v1/me/prefs";
+    final response = await http.patch(Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'bearer ' + prefs.getString("token")!,
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(data));
+  }
+
+  Future<SettingsInfos> getSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url = "https://oauth.reddit.com/api/v1/me/prefs";
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Authorization': 'bearer ' + prefs.getString("token")!,
+    });
+    if (response.statusCode == 200) {
+      return SettingsInfos.fromJson(jsonDecode(response.body));
+    } else {
+      return SettingsInfos(false, false, false, false, false, false);
     }
   }
 
