@@ -222,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: MediaQuery.of(context).size.height * 0.389,
                 color: Colors.black87,
                 child: DefaultTabController(
-                  length: 2,
+                  length: 1,
                   child: Scaffold(
                     appBar: AppBar(
                       backgroundColor: Colors.blueAccent,
@@ -232,10 +232,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           TabBar(
                             indicatorColor: Colors.white,
-                            indicatorWeight: 2,
+                            indicatorWeight: 1,
                             tabs: [
                               Text("Posts"),
-                              Text("Comments"),
                             ],
                           )
                         ],
@@ -263,9 +262,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         )),
-                        Center(
-                          child: Text("Comments"),
-                        )
                       ],
                     ),
                   ),

@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                     callRequests(dropdownValue, limit);
                   });
                 },
-                items: <String>['new', 'best', 'hot', 'random']
+                items: <String>['new', 'best', 'hot']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
